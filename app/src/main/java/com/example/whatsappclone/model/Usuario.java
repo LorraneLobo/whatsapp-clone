@@ -7,9 +7,7 @@ import com.google.firebase.database.Exclude;
 public class Usuario {
 
     private String idUsuario;
-    private String email;
     private String nome;
-    private String senha;
 
     public Usuario() {
     }
@@ -29,14 +27,6 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -45,12 +35,4 @@ public class Usuario {
         this.nome = nome;
     }
 
-    @Exclude
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
 }
