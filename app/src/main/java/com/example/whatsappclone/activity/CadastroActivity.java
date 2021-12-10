@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +55,11 @@ public class CadastroActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(CadastroActivity.this, "Usuário criado com sucesso!", Toast.LENGTH_SHORT).show();
+                        String nome = binding.editNome.getEditText().getText().toString();
 
                         Usuario usuario = new Usuario();
-                        String idUsuario = Base64Custom.codificarBase64(email);
-                        usuario.setIdUsuario(idUsuario);
+                        usuario.setNome(nome);
+                        usuario.setIdUsuario(Base64Custom.codificarBase64(email));
                         usuario.salvar();
                         finish();
                     } else {

@@ -1,6 +1,12 @@
 package com.example.whatsappclone.model;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
@@ -11,6 +17,7 @@ public class Usuario {
 
     public Usuario() {
     }
+
     public void salvar() {
         DatabaseReference firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         firebase.child("usuarios")
