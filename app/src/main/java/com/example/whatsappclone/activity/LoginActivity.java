@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityLoginBinding;
-import com.example.whatsappclone.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -32,8 +31,7 @@ public class LoginActivity extends AppCompatActivity {
             String textoSenha = binding.inputSenhaLogin.getEditText().getText().toString();
 
             if (!textoEmail.isEmpty() && !textoSenha.isEmpty()){
-
-                validarLogin();
+                verificarLogin();
             }else {
                 Toast.makeText(LoginActivity.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
             }
@@ -54,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void validarLogin() {
+    private void verificarLogin() {
         String email = binding.inputEmailLogin.getEditText().getText().toString();
         String senha = binding.inputSenhaLogin.getEditText().getText().toString();
 
