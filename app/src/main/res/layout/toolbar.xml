@@ -7,10 +7,9 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarPrincipal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        android:elevation="0dp"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="0dp"
+        android:theme="@style/toolbar.Principal" />
 
 </FrameLayout>
