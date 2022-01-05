@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone">
         <activity
+            android:name=".activity.ConfiguracoesActivity"
+            android:exported="false"
+            android:parentActivityName=".activity.MainActivity"/>
+        <activity
             android:name=".activity.CadastroActivity"
             android:exported="false" />
         <activity

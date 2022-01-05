@@ -9,6 +9,7 @@
 
     <color name="background">#056162</color>
     <color name="darker_grey">#a9a9a9</color>
+    <color name="cinza_claro">#EEEEEE</color>
 
 
 </resources>

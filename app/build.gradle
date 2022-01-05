@@ -46,5 +46,8 @@ dependencies {
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    //Dependencia CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 
 }
