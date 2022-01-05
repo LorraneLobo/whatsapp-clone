@@ -9,10 +9,14 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.whatsappclone.R;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
+import com.example.whatsappclone.fragment.ContatoFragment;
+import com.example.whatsappclone.fragment.ConversasFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
@@ -31,14 +35,18 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Whatsapp");
         setSupportActionBar(toolbar);
 
-//        FragmentPagerItemAdapter adapter = FragmentPagerItemAdapter(
-//                getSupportFragmentManager(),
-//                FragmentPagerItems.with(this)
-//                .add()
-//                        .add()
-//                .create()
-//        );
+        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(),
+                FragmentPagerItems.with(this)
+                .add("Conversas", ConversasFragment.class).add("Contatos", ContatoFragment.class)
+                .create()
+        );
 
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(adapter);
+
+        SmartTabLayout viewPagerTab = findViewById(R.id.viewPagerTab);
+        viewPagerTab.setViewPager(viewPager);
 
     }
 
