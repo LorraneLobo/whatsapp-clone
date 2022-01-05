@@ -60,6 +60,7 @@ public class CadastroActivity extends AppCompatActivity {
                         Usuario usuario = new Usuario();
                         usuario.setNome(nome);
                         usuario.setIdUsuario(Base64Custom.codificarBase64(email));
+                        usuario.setEmail(email);
                         usuario.salvar();
                         finish();
                     } else {
