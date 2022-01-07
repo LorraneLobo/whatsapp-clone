@@ -86,6 +86,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             binding.circleImageViewFotoPerfil.setImageResource(R.drawable.padrao);
         }
 
+        binding.editPerfilNome.setText(usuario.getDisplayName());
+
         easyImage = new EasyImage.Builder(this)
                 // Setting to true will cause taken pictures to show up in the device gallery, DEFAULT false
                 .setCopyImagesToPublicGalleryFolder(true)

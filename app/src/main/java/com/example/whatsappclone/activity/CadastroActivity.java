@@ -12,6 +12,7 @@ import com.example.whatsappclone.R;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityCadastroBinding;
 import com.example.whatsappclone.helper.Base64Custom;
+import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +63,8 @@ public class CadastroActivity extends AppCompatActivity {
                         usuario.setIdUsuario(Base64Custom.codificarBase64(email));
                         usuario.setEmail(email);
                         usuario.salvar();
+
+                        UsuarioFirebase.atualizarNomeUsuario(nome);
                         finish();
                     } else {
 
