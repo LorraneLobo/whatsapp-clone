@@ -2,6 +2,7 @@ package com.example.whatsappclone.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,61 +13,33 @@ import android.view.ViewGroup;
 
 import com.example.whatsappclone.R;
 import com.example.whatsappclone.adapter.ContatosAdapter;
+import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityConfiguracoesBinding;
 import com.example.whatsappclone.databinding.FragmentContatoBinding;
 import com.example.whatsappclone.model.Usuario;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ContatosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ContatosFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private FragmentContatoBinding binding;
     private ContatosAdapter adapter;
     private ArrayList<Usuario> listaContatos = new ArrayList<>();
+    private DatabaseReference usuaruiosRef;
+    private ValueEventListener valueEventListenerContatos;
 
     public ContatosFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ContatoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ContatosFragment newInstance(String param1, String param2) {
-        ContatosFragment fragment = new ContatosFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -75,6 +48,7 @@ public class ContatosFragment extends Fragment {
         binding = FragmentContatoBinding.inflate(getLayoutInflater(), container, false);
 
         //Configurações iniciais
+        usuaruiosRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
 
         //configurar adapter
         adapter = new ContatosAdapter(listaContatos, getActivity());
@@ -87,5 +61,35 @@ public class ContatosFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        recuperarContatos();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        usuaruiosRef.removeEventListener(valueEventListenerContatos);
+    }
+
+    public void recuperarContatos(){
+        valueEventListenerContatos = usuaruiosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dados: snapshot.getChildren()){
+                    Usuario usuario = dados.getValue(Usuario.class);
+                    listaContatos.add(usuario);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
