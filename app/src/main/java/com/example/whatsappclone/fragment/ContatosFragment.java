@@ -1,5 +1,6 @@
 package com.example.whatsappclone.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,13 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.whatsappclone.R;
+import com.example.whatsappclone.activity.ChatActivity;
 import com.example.whatsappclone.adapter.ContatosAdapter;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityConfiguracoesBinding;
 import com.example.whatsappclone.databinding.FragmentContatoBinding;
+import com.example.whatsappclone.helper.RecyclerItemClickListener;
+import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Usuario;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +37,7 @@ public class ContatosFragment extends Fragment {
     private ArrayList<Usuario> listaContatos = new ArrayList<>();
     private DatabaseReference usuaruiosRef;
     private ValueEventListener valueEventListenerContatos;
+    private FirebaseUser usuarioAtual;
 
     public ContatosFragment() {
         // Required empty public constructor
@@ -49,6 +56,7 @@ public class ContatosFragment extends Fragment {
 
         //Configurações iniciais
         usuaruiosRef = ConfiguracaoFirebase.getFirebaseDatabase().child("usuarios");
+        usuarioAtual = UsuarioFirebase.getUsuarioAtual();
 
         //configurar adapter
         adapter = new ContatosAdapter(listaContatos, getActivity());
@@ -58,6 +66,31 @@ public class ContatosFragment extends Fragment {
         binding.recyclerViewListaContatos.setLayoutManager(layoutManager);
         binding.recyclerViewListaContatos.setHasFixedSize(true);
         binding.recyclerViewListaContatos.setAdapter(adapter);
+
+        //configurar evento de clique no recyclerview
+        binding.recyclerViewListaContatos.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        getActivity(),
+                        binding.recyclerViewListaContatos,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent i = new Intent(getActivity(), ChatActivity.class);
+                                startActivity(i);
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            }
+                        }
+                )
+        );
 
         // Inflate the layout for this fragment
         return binding.getRoot();
@@ -81,7 +114,11 @@ public class ContatosFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dados: snapshot.getChildren()){
                     Usuario usuario = dados.getValue(Usuario.class);
-                    listaContatos.add(usuario);
+
+                    String emailUsuarioAtual = usuarioAtual.getEmail();
+                    if (!emailUsuarioAtual.equals(usuario.getEmail())){
+                        listaContatos.add(usuario);
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
