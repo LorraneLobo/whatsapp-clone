@@ -57,7 +57,7 @@
             android:text="Nome do usuário" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageAtualizarNome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

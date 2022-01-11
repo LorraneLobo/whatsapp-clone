@@ -23,6 +23,7 @@ import com.example.whatsappclone.databinding.ActivityConfiguracoesBinding;
 import com.example.whatsappclone.helper.Base64Custom;
 import com.example.whatsappclone.helper.Permissao;
 import com.example.whatsappclone.helper.UsuarioFirebase;
+import com.example.whatsappclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +49,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private ActivityConfiguracoesBinding binding;
     private StorageReference storageReference;
     private String idUsuario;
+    private Usuario usuarioLogado;
 
     private String[] permissoesNecessarias = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -64,6 +66,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         //Configurações iniciais
         storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         idUsuario = UsuarioFirebase.getIdentificadorUsuario();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
 
         //Validar permissões
         Permissao.validarPermissoes(permissoesNecessarias, this, 1);
@@ -100,6 +103,16 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             easyImage.openChooser(this);
         });
 
+        binding.imageAtualizarNome.setOnClickListener(v -> {
+            String nome = binding.editPerfilNome.getText().toString();
+            boolean retorno = UsuarioFirebase.atualizarNomeUsuario(nome);
+            if (retorno){
+                usuarioLogado.setNome(nome);
+                usuarioLogado.atualizar();
+                Toast.makeText(ConfiguracoesActivity.this, "Nome atualizado", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -122,7 +135,6 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                     UploadTask uploadTask = imagemRef.putBytes(bytes);
                     uploadTask.addOnFailureListener(e -> Toast.makeText(ConfiguracoesActivity.this, "Erro ao fazer upload da imagem", Toast.LENGTH_SHORT).show())
                             .addOnSuccessListener(taskSnapshot -> {
-                                Toast.makeText(ConfiguracoesActivity.this, "Sucesso ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
 
                                 imagemRef.getDownloadUrl().addOnCompleteListener(task -> {
                                    Uri url =  task.getResult();
@@ -151,7 +163,14 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     }
 
     public void atualizaFotoUsuario(Uri url){
-        UsuarioFirebase.atualizarFotoUsuario(url);
+        boolean retorno = UsuarioFirebase.atualizarFotoUsuario(url);
+        if (retorno){
+            usuarioLogado.setFoto(url.toString());
+            usuarioLogado.atualizar();
+
+            Toast.makeText(ConfiguracoesActivity.this, "Foto atualizada", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
