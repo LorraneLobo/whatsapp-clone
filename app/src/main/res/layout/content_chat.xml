@@ -58,6 +58,7 @@
             android:clickable="true"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="mini"
+            app:tint="@color/white"
             app:srcCompat="@drawable/ic_enviar_branco_24" />
     </LinearLayout>
 </LinearLayout>
