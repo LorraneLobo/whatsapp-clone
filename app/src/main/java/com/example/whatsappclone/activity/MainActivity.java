@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.whatsappclone.R;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
-import com.example.whatsappclone.fragment.ContatoFragment;
+import com.example.whatsappclone.fragment.ContatosFragment;
 import com.example.whatsappclone.fragment.ConversasFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
-                .add("Conversas", ConversasFragment.class).add("Contatos", ContatoFragment.class)
+                .add("Conversas", ConversasFragment.class).add("Contatos", ContatosFragment.class)
                 .create()
         );
 
