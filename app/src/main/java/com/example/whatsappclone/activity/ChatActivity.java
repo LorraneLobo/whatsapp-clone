@@ -12,6 +12,8 @@ import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Mensagem;
 import com.example.whatsappclone.model.Usuario;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -22,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.whatsappclone.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -33,6 +38,9 @@ public class ChatActivity extends AppCompatActivity {
     private Usuario usuarioDestinatario;
     private MensagensAdapter adapter;
     private List<Mensagem> mensagens = new ArrayList<>();
+    private DatabaseReference database;
+    private DatabaseReference mensagensRef;
+    private ChildEventListener childEventListenerMensagens;
 
     //identificador usuarios remetente e destinatario
     private String idUsuarioRemetente;
@@ -84,6 +92,11 @@ public class ChatActivity extends AppCompatActivity {
         binding.content.recyclerMensagens.setLayoutManager(layoutManager);
         binding.content.recyclerMensagens.setHasFixedSize(true);
         binding.content.recyclerMensagens.setAdapter(adapter);
+
+        database = ConfiguracaoFirebase.getFirebaseDatabase();
+        mensagensRef = database.child("mensagens")
+                .child(idUsuarioRemetente)
+                .child(idUsuarioDestinatario);
     }
 
     public void enviarMensagem(View v){
@@ -111,6 +124,51 @@ public class ChatActivity extends AppCompatActivity {
                 .child(idDestinatario)
                 .push()
                 .setValue(msg);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        recuperarMensagens();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mensagensRef.removeEventListener(childEventListenerMensagens);
+    }
+
+    private void recuperarMensagens(){
+
+        childEventListenerMensagens = mensagensRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Mensagem mensagem = snapshot.getValue(Mensagem.class);
+                mensagens.add(mensagem);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
