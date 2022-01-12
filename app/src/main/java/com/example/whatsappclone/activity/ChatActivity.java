@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.example.whatsappclone.adapter.MensagensAdapter;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityChatBinding;
 import com.example.whatsappclone.helper.Base64Custom;
@@ -16,16 +17,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import androidx.navigation.ui.AppBarConfiguration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.whatsappclone.R;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChatActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityChatBinding binding;
     private Usuario usuarioDestinatario;
+    private MensagensAdapter adapter;
+    private List<Mensagem> mensagens = new ArrayList<>();
 
     //identificador usuarios remetente e destinatario
     private String idUsuarioRemetente;
@@ -69,6 +76,14 @@ public class ChatActivity extends AppCompatActivity {
             idUsuarioDestinatario = Base64Custom.codificarBase64(usuarioDestinatario.getEmail());
         }
 
+        //Configuração adapter
+        adapter = new MensagensAdapter(mensagens, getApplicationContext());
+
+        //Configuração recyclerview
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        binding.content.recyclerMensagens.setLayoutManager(layoutManager);
+        binding.content.recyclerMensagens.setHasFixedSize(true);
+        binding.content.recyclerMensagens.setAdapter(adapter);
     }
 
     public void enviarMensagem(View v){
