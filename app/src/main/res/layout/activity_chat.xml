@@ -38,7 +38,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_chat" />
+    <include layout="@layout/content_chat" android:id="@+id/content" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
