@@ -10,6 +10,7 @@ import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityChatBinding;
 import com.example.whatsappclone.helper.Base64Custom;
 import com.example.whatsappclone.helper.UsuarioFirebase;
+import com.example.whatsappclone.model.Conversa;
 import com.example.whatsappclone.model.Mensagem;
 import com.example.whatsappclone.model.Usuario;
 
@@ -20,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -202,10 +202,23 @@ public class ChatActivity extends AppCompatActivity {
             //salvar mensagem para o destinatario
             salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
 
+            //Salvar conversa
+            salvarConversa(mensagem);
+
             //Limpar texto
             binding.content.editMensagem.setText("");
         }
 
+    }
+
+    private void salvarConversa(Mensagem mensagem) {
+        Conversa conversaRemetente = new Conversa();
+        conversaRemetente.setIdRemetente(idUsuarioRemetente);
+        conversaRemetente.setIdDestinatario(idUsuarioDestinatario);
+        conversaRemetente.setUltimaMensagem(mensagem.getMensagem());
+        conversaRemetente.setUsuarioExibicao(usuarioDestinatario);
+
+        conversaRemetente.salvar();
     }
 
     public void salvarMensagem(String idRemetente, String idDestinatario, Mensagem msg){
@@ -214,7 +227,6 @@ public class ChatActivity extends AppCompatActivity {
 
         mensagemRef.child(idRemetente)
                 .child(idDestinatario)
-                .push()
                 .setValue(msg);
 
     }
