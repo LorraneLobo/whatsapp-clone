@@ -46,7 +46,7 @@
                 android:inputType="textPersonName" />
 
             <ImageView
-                android:id="@+id/imageFotoMensagem"
+                android:id="@+id/imageCameraMensagem"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 app:srcCompat="@drawable/ic_camera_cinza_24" />

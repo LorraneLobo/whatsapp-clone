@@ -1,5 +1,6 @@
 package com.example.whatsappclone.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,17 +30,31 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.aprilapps.easyphotopicker.MediaFile;
+import pl.aprilapps.easyphotopicker.MediaSource;
 
 public class ChatActivity extends AppCompatActivity {
+
+    private EasyImage easyImage;
 
     private ActivityChatBinding binding;
     private Usuario usuarioDestinatario;
     private MensagensAdapter adapter;
     private List<Mensagem> mensagens = new ArrayList<>();
     private DatabaseReference database;
+    private StorageReference storageReference;
     private DatabaseReference mensagensRef;
     private ChildEventListener childEventListenerMensagens;
 
@@ -94,9 +110,82 @@ public class ChatActivity extends AppCompatActivity {
         binding.content.recyclerMensagens.setAdapter(adapter);
 
         database = ConfiguracaoFirebase.getFirebaseDatabase();
+        storageReference = ConfiguracaoFirebase.getFirebaseStorage();
         mensagensRef = database.child("mensagens")
                 .child(idUsuarioRemetente)
                 .child(idUsuarioDestinatario);
+
+        easyImage = new EasyImage.Builder(this)
+                // Setting to true will cause taken pictures to show up in the device gallery, DEFAULT false
+                .setCopyImagesToPublicGalleryFolder(true)
+                // Sets the name for images stored if setCopyImagesToPublicGalleryFolder = true
+                .setFolderName("photo")
+                .allowMultiple(false)
+                .build();
+
+        //Evento de clique na camera
+        binding.content.imageCameraMensagem.setOnClickListener(v -> easyImage.openChooser(this));
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        easyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+            @Override
+            public void onMediaFilesPicked(MediaFile[] imageFiles, MediaSource source) {
+
+                //Recuperar dados da imagem para o firebase
+                try {
+                    byte[] bytes = FileUtils.readFileToByteArray(imageFiles[0].getFile());
+
+                    //Criar nome da imagem
+                    String nomeImagem = UUID.randomUUID().toString();
+
+                    //Salvar imagem no firebase
+                    final StorageReference imagemRef = storageReference
+                            .child("imagens")
+                            .child("fotos")
+                            .child(idUsuarioRemetente)
+                            .child(nomeImagem);
+
+                    UploadTask uploadTask = imagemRef.putBytes(bytes);
+                    uploadTask.addOnFailureListener(e -> Toast.makeText(ChatActivity.this, "Erro ao fazer upload da imagem", Toast.LENGTH_SHORT).show())
+                            .addOnSuccessListener(taskSnapshot -> {
+
+                                imagemRef.getDownloadUrl().addOnCompleteListener(task -> {
+                                    String url =  task.getResult().toString();
+
+                                    Mensagem mensagem = new Mensagem();
+                                    mensagem.setIdUsuario(idUsuarioRemetente);
+                                    mensagem.setMensagem("imagem.jpeg");
+                                    mensagem.setImagem(url);
+
+                                    //Salvar mensagem remetente
+                                    salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagem);
+
+                                    //Salvar mensagem destinatario
+                                    salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
+                                });
+
+                            });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onImagePickerError(@NonNull Throwable error, @NonNull MediaSource source) {
+                //Some error handling
+                error.printStackTrace();
+            }
+
+            @Override
+            public void onCanceled(@NonNull MediaSource source) {
+                //Not necessary to remove any files manually anymore
+            }
+        });
     }
 
     public void enviarMensagem(View v){
