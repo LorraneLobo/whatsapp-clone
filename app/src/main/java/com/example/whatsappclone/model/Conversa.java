@@ -3,7 +3,9 @@ package com.example.whatsappclone.model;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
-public class Conversa {
+import java.io.Serializable;
+
+public class Conversa implements Serializable {
 
     private String idRemetente;
     private String idDestinatario;
@@ -19,7 +21,6 @@ public class Conversa {
 
         conversaRef.child(this.getIdRemetente())
                 .child(this.getIdDestinatario())
-                .push()
                 .setValue(this);
     }
 

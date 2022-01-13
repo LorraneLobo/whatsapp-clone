@@ -227,6 +227,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mensagemRef.child(idRemetente)
                 .child(idDestinatario)
+                .push()
                 .setValue(msg);
 
     }
