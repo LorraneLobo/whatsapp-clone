@@ -16,6 +16,7 @@ import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.fragment.ContatosFragment;
 import com.example.whatsappclone.fragment.ConversasFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -23,6 +24,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private MaterialSearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         SmartTabLayout viewPagerTab = findViewById(R.id.viewPagerTab);
         viewPagerTab.setViewPager(viewPager);
+
+        //Configuracao do search view
+        searchView = findViewById(R.id.materialSearchPrincipal);
 
     }
 
@@ -82,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+
+        //Configurar botao de pesquisa
+        MenuItem item = menu.findItem(R.id.menuPesquisa);
+        searchView.setMenuItem(item);
 
         return super.onCreateOptionsMenu(menu);
     }

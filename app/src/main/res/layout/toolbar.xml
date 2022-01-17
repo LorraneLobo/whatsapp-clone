@@ -12,4 +12,9 @@
         android:elevation="0dp"
         android:theme="@style/toolbar.Principal" />
 
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/materialSearchPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </FrameLayout>
