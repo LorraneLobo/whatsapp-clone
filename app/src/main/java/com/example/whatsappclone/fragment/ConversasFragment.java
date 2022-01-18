@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class ConversasFragment extends Fragment {
 
@@ -116,7 +117,25 @@ public class ConversasFragment extends Fragment {
 
     public void pesquisarConversas(String texto){
 
+        List<Conversa> listaConversasBusca = new ArrayList<>();
 
+        for (Conversa conversa : listaConversas){
+            String nome = conversa.getUsuarioExibicao().getNome().toLowerCase();
+            String ultimaMsg = conversa.getUltimaMensagem().toLowerCase();
+
+            if (nome.contains(texto) || ultimaMsg.contains(texto)) {
+                listaConversasBusca.add(conversa);
+            }
+        }
+        adapter = new ConversasAdapter(listaConversasBusca, getActivity());
+        binding.recyclerListaConversas.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void recarregarConversas(){
+        adapter = new ConversasAdapter(listaConversas, getActivity());
+        binding.recyclerListaConversas.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     public void recuperarConversas(){

@@ -21,6 +21,8 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
@@ -52,6 +54,22 @@ public class MainActivity extends AppCompatActivity {
 
         //Configuracao do search view
         searchView = findViewById(R.id.materialSearchPrincipal);
+
+        //Listener para o search view
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                ConversasFragment fragment = (ConversasFragment) adapter.getPage(0);
+                fragment.recarregarConversas();
+            }
+        });
+
+        //Listener para caixa de texto
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -62,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 ConversasFragment fragment = (ConversasFragment) adapter.getPage(0);
                 if (newText != null && !newText.isEmpty()){
-                    fragment.pesquisarConversas(newText);
+                    fragment.pesquisarConversas(newText.toLowerCase());
                 }
                 return true;
             }
