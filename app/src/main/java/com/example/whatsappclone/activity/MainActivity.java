@@ -52,6 +52,21 @@ public class MainActivity extends AppCompatActivity {
 
         //Configuracao do search view
         searchView = findViewById(R.id.materialSearchPrincipal);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ConversasFragment fragment = (ConversasFragment) adapter.getPage(0);
+                if (newText != null && !newText.isEmpty()){
+                    fragment.pesquisarConversas(newText);
+                }
+                return true;
+            }
+        });
 
     }
 

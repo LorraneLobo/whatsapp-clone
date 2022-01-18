@@ -114,6 +114,11 @@ public class ConversasFragment extends Fragment {
         conversasRef.removeEventListener(childEventListenerConversas);
     }
 
+    public void pesquisarConversas(String texto){
+
+
+    }
+
     public void recuperarConversas(){
 
         childEventListenerConversas = conversasRef.addChildEventListener(new ChildEventListener() {
