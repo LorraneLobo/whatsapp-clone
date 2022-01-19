@@ -100,6 +100,7 @@ public class ConversasFragment extends Fragment {
         database = ConfiguracaoFirebase.getFirebaseDatabase();
         conversasRef = database.child("conversas").child(identificadorUsuario);
 
+
         return binding.getRoot();
     }
 

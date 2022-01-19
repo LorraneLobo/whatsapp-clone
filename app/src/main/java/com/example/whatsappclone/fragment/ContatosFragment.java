@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 
 import com.example.whatsappclone.R;
 import com.example.whatsappclone.activity.ChatActivity;
+import com.example.whatsappclone.activity.GrupoActivity;
 import com.example.whatsappclone.adapter.ContatosAdapter;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.databinding.ActivityConfiguracoesBinding;
@@ -76,9 +77,16 @@ public class ContatosFragment extends Fragment {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Usuario usuarioSelecionado = listaContatos.get(position);
-                                Intent i = new Intent(getActivity(), ChatActivity.class);
-                                i.putExtra("chatContato", usuarioSelecionado);
-                                startActivity(i);
+                                boolean cabecalho = usuarioSelecionado.getEmail().isEmpty();
+
+                                if (cabecalho){
+                                    Intent i = new Intent(getActivity(), GrupoActivity.class);
+                                    startActivity(i);
+                                }else {
+                                    Intent i = new Intent(getActivity(), ChatActivity.class);
+                                    i.putExtra("chatContato", usuarioSelecionado);
+                                    startActivity(i);
+                                }
                             }
 
                             @Override
@@ -93,6 +101,15 @@ public class ContatosFragment extends Fragment {
                         }
                 )
         );
+
+        /* Define usuário com email vazio
+        * em caso de email vazio o usuário será utilizado como
+        * cabecalho, exibindo novo grupo */
+        Usuario itemGrupo = new Usuario();
+        itemGrupo.setNome("Novo Grupo");
+        itemGrupo.setEmail("");
+
+        listaContatos.add( itemGrupo);
 
         // Inflate the layout for this fragment
         return binding.getRoot();
