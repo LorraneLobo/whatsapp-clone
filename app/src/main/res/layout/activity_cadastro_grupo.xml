@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.GrupoActivity">
+    tools:context=".activity.CadastroGrupoActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,17 +20,17 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_grupo" android:id="@+id/content" />
+    <include layout="@layout/content_cadastro_grupo" android:id="@+id/content" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAvancarCadastro"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_seta_proximo_branca_24"
+        app:srcCompat="@drawable/ic_confirmar_branco_24"
         app:tint="@color/white"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

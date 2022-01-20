@@ -1,5 +1,6 @@
 package com.example.whatsappclone.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.whatsappclone.adapter.ContatosAdapter;
@@ -25,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GrupoActivity extends AppCompatActivity {
@@ -55,9 +57,6 @@ public class GrupoActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        binding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
 
         //Configurar adapter
         contatosAdapter = new ContatosAdapter(listaMembros, getApplicationContext());
@@ -140,6 +139,16 @@ public class GrupoActivity extends AppCompatActivity {
                     }
                 }
         ));
+
+        //Configurar fab
+        binding.fabAvancarCadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(GrupoActivity.this, CadastroGrupoActivity.class);
+                i.putExtra("membros", listaMembrosSelecionados);
+                startActivity(i);
+            }
+        });
     }
 
     @Override

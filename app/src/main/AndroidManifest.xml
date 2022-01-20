@@ -24,6 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone">
         <activity
+            android:name=".activity.CadastroGrupoActivity"
+            android:exported="false"
+            android:label="@string/title_activity_cadastro_grupo"
+            android:parentActivityName=".activity.GrupoActivity"
+            android:theme="@style/Theme.WhatsappClone.NoActionBar" />
+        <activity
             android:name=".activity.GrupoActivity"
             android:exported="false"
             android:label="@string/title_activity_grupo"
