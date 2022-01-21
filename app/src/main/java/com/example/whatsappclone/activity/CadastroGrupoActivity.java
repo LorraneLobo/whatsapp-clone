@@ -92,14 +92,16 @@ public class CadastroGrupoActivity extends AppCompatActivity {
         binding.content.recyclerMembrosGrupo.setHasFixedSize(true);
         binding.content.recyclerMembrosGrupo.setAdapter(grupoSelecionadoAdapter);
 
+        //Configurar fab
+        binding.fabSalvarGrupo.setOnClickListener(v -> {
+            String nomeGrupo = binding.content.editNomeGrupo.getText().toString();
 
+            //Adiciona a lista de membros o usuário que está logado
+            listaMembrosSelecionados.add(UsuarioFirebase.getDadosUsuarioLogado());
+            grupo.setMembros(listaMembrosSelecionados);
+            grupo.setNome(nomeGrupo);
+            grupo.salvar();
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
         });
     }
 

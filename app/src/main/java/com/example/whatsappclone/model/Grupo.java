@@ -23,6 +23,13 @@ public class Grupo implements Serializable {
         setId(idGrupoFirebase);
     }
 
+    public void salvar() {
+        DatabaseReference database = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference grupoRef = database.child("grupos");
+
+        grupoRef.child(getId()).setValue(this);
+    }
+
     public String getId() {
         return id;
     }
@@ -54,4 +61,6 @@ public class Grupo implements Serializable {
     public void setMembros(List<Usuario> membros) {
         this.membros = membros;
     }
+
+
 }
