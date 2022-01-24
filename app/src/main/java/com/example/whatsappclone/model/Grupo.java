@@ -3,6 +3,7 @@ package com.example.whatsappclone.model;
 import android.provider.ContactsContract;
 
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
+import com.example.whatsappclone.helper.Base64Custom;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
@@ -28,6 +29,23 @@ public class Grupo implements Serializable {
         DatabaseReference grupoRef = database.child("grupos");
 
         grupoRef.child(getId()).setValue(this);
+
+        //Salvar conversa para membros do grupo
+        for (Usuario membro: getMembros()){
+
+            String idRemetente = Base64Custom.codificarBase64(membro.getEmail());
+            String idDestinatario = getId();
+
+            Conversa conversa = new Conversa();
+            conversa.setIdRemetente(idRemetente);
+            conversa.setIdDestinatario(idDestinatario);
+            conversa.setUltimaMensagem("");
+            conversa.setIsGroup("true");
+            conversa.setGrupo(this);
+
+            conversa.salvar();
+        }
+
     }
 
     public String getId() {
