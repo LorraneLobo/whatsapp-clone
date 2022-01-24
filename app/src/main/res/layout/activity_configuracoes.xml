@@ -61,7 +61,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_editar_verde_24dp" />
+            android:background="@drawable/ic_confirmar_branco_24"
+            android:backgroundTint="@color/colorPrimary" />
 
     </LinearLayout>
 
