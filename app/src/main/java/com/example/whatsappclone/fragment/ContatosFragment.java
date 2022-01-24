@@ -106,17 +106,21 @@ public class ContatosFragment extends Fragment {
                 )
         );
 
+        adicionarMenuNovoGrupo();
+
+        // Inflate the layout for this fragment
+        return binding.getRoot();
+    }
+
+    private void adicionarMenuNovoGrupo() {
         /* Define usuário com email vazio
-        * em caso de email vazio o usuário será utilizado como
-        * cabecalho, exibindo novo grupo */
+         * em caso de email vazio o usuário será utilizado como
+         * cabecalho, exibindo novo grupo */
         Usuario itemGrupo = new Usuario();
         itemGrupo.setNome("Novo Grupo");
         itemGrupo.setEmail("");
 
         listaContatos.add( itemGrupo);
-
-        // Inflate the layout for this fragment
-        return binding.getRoot();
     }
 
     @Override
@@ -135,6 +139,9 @@ public class ContatosFragment extends Fragment {
         valueEventListenerContatos = usuaruiosRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                limparListaContatos();
+
                 for (DataSnapshot dados: snapshot.getChildren()){
                     Usuario usuario = dados.getValue(Usuario.class);
 
@@ -152,6 +159,12 @@ public class ContatosFragment extends Fragment {
             }
         });
     }
+
+    public void limparListaContatos(){
+        listaContatos.clear();
+        adicionarMenuNovoGrupo();
+    }
+
     public void pesquisarContatos(String texto){
 
         List<Usuario> listaContatosBusca = new ArrayList<>();
