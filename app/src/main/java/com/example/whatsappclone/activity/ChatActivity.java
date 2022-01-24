@@ -63,6 +63,7 @@ public class ChatActivity extends AppCompatActivity {
     //identificador usuarios remetente e destinatario
     private String idUsuarioRemetente;
     private String idUsuarioDestinatario;
+    private Usuario usuarioRemetente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //recupera dados do usuario remetente
         idUsuarioRemetente = UsuarioFirebase.getIdentificadorUsuario();
+        usuarioRemetente = UsuarioFirebase.getDadosUsuarioLogado();
 
         //Recuperar dados do usuário destinatario
         Bundle bundle = getIntent().getExtras();
@@ -225,7 +227,6 @@ public class ChatActivity extends AppCompatActivity {
                 //Salvar conversa remetente
                 salvarConversa(idUsuarioRemetente, idUsuarioDestinatario, usuarioDestinatario, mensagem, false);
                 //Salvar conversa destinatario
-                Usuario usuarioRemetente = UsuarioFirebase.getDadosUsuarioLogado();
                 salvarConversa(idUsuarioDestinatario, idUsuarioRemetente, usuarioRemetente, mensagem, false);
 
                 //Limpar texto
@@ -238,6 +239,7 @@ public class ChatActivity extends AppCompatActivity {
                     Mensagem mensagem = new Mensagem();
                     mensagem.setIdUsuario(idUsuarioLogadoGrupo);
                     mensagem.setMensagem(textoMensagem);
+                    mensagem.setNome(usuarioRemetente.getNome());
 
                     //Salvar mensagem para o membro
                     salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagem);
