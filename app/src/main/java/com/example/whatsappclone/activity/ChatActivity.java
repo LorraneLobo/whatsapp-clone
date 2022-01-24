@@ -176,16 +176,38 @@ public class ChatActivity extends AppCompatActivity {
                                 imagemRef.getDownloadUrl().addOnCompleteListener(task -> {
                                     String url =  task.getResult().toString();
 
-                                    Mensagem mensagem = new Mensagem();
-                                    mensagem.setIdUsuario(idUsuarioRemetente);
-                                    mensagem.setMensagem("imagem.jpeg");
-                                    mensagem.setImagem(url);
+                                    if (usuarioDestinatario != null){
+                                        Mensagem mensagem = new Mensagem();
+                                        mensagem.setIdUsuario(idUsuarioRemetente);
+                                        mensagem.setMensagem("imagem.jpeg");
+                                        mensagem.setImagem(url);
 
-                                    //Salvar mensagem remetente
-                                    salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagem);
+                                        //Salvar mensagem remetente
+                                        salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagem);
 
-                                    //Salvar mensagem destinatario
-                                    salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
+                                        //Salvar mensagem destinatario
+                                        salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
+                                    }else {
+                                        for (Usuario membro: grupo.getMembros()){
+                                            String idRemetenteGrupo = Base64Custom.codificarBase64(membro.getEmail());
+                                            String idUsuarioLogadoGrupo = UsuarioFirebase.getIdentificadorUsuario();
+
+                                            Mensagem mensagem = new Mensagem();
+                                            mensagem.setIdUsuario(idUsuarioLogadoGrupo);
+                                            mensagem.setMensagem("imagem.jpeg");
+                                            mensagem.setNome(usuarioRemetente.getNome());
+                                            mensagem.setImagem(url);
+
+                                            //Salvar mensagem para o membro
+                                            salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagem);
+
+                                            //Salvar conversa
+                                            salvarConversa(idRemetenteGrupo, idUsuarioDestinatario, usuarioDestinatario, mensagem, true);
+
+                                            //Limpar texto
+                                            binding.content.editMensagem.setText("");
+                                        }
+                                    }
                                 });
 
                             });
