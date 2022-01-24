@@ -54,13 +54,17 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
                 holder.foto.setImageResource(R.drawable.padrao);
             }
         }else {
-            holder.nome.setText(conversa.getUsuarioExibicao().getNome());
+            Usuario usuario = conversa.getUsuarioExibicao();
 
-            if (conversa.getUsuarioExibicao().getFoto() != null){
-                Uri uri = Uri.parse(conversa.getUsuarioExibicao().getFoto());
-                Glide.with(context).load(uri).into(holder.foto);
-            }else {
-                holder.foto.setImageResource(R.drawable.padrao);
+            if (usuario != null){
+                holder.nome.setText(usuario.getNome());
+
+                if (usuario.getFoto() != null){
+                    Uri uri = Uri.parse(usuario.getFoto());
+                    Glide.with(context).load(uri).into(holder.foto);
+                }else {
+                    holder.foto.setImageResource(R.drawable.padrao);
+                }
             }
         }
     }

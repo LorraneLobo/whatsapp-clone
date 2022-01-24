@@ -211,32 +211,60 @@ public class ChatActivity extends AppCompatActivity {
         String textoMensagem = binding.content.editMensagem.getText().toString();
 
         if (!textoMensagem.isEmpty()){
-            Mensagem mensagem = new Mensagem();
-            mensagem.setIdUsuario(idUsuarioRemetente);
-            mensagem.setMensagem(textoMensagem);
+            if (usuarioDestinatario != null){
+                Mensagem mensagem = new Mensagem();
+                mensagem.setIdUsuario(idUsuarioRemetente);
+                mensagem.setMensagem(textoMensagem);
 
-            //salvar mensagem para o remetente
-            salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagem);
+                //salvar mensagem para o remetente
+                salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagem);
 
-            //salvar mensagem para o destinatario
-            salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
+                //salvar mensagem para o destinatario
+                salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
 
-            //Salvar conversa
-            salvarConversa(mensagem);
+                //Salvar conversa
+                salvarConversa(mensagem, false);
 
-            //Limpar texto
-            binding.content.editMensagem.setText("");
+                //Limpar texto
+                binding.content.editMensagem.setText("");
+            }else {
+                for (Usuario membro: grupo.getMembros()){
+                    String idRemetenteGrupo = Base64Custom.codificarBase64(membro.getEmail());
+                    String idUsuarioLogadoGrupo = UsuarioFirebase.getIdentificadorUsuario();
+
+                    Mensagem mensagem = new Mensagem();
+                    mensagem.setIdUsuario(idUsuarioLogadoGrupo);
+                    mensagem.setMensagem(textoMensagem);
+
+                    //Salvar mensagem para o membro
+                    salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagem);
+
+                    //Salvar conversa
+                    salvarConversa(mensagem, true);
+
+                }
+            }
+
         }
 
     }
 
-    private void salvarConversa(Mensagem mensagem) {
+    private void salvarConversa(Mensagem mensagem, boolean isGroup) {
+        //salvar conversa remetente
         Conversa conversaRemetente = new Conversa();
         conversaRemetente.setIdRemetente(idUsuarioRemetente);
         conversaRemetente.setIdDestinatario(idUsuarioDestinatario);
         conversaRemetente.setUltimaMensagem(mensagem.getMensagem());
-        conversaRemetente.setUsuarioExibicao(usuarioDestinatario);
 
+        if (isGroup){
+            //conversa de grupo
+            conversaRemetente.setIsGroup("true");
+            conversaRemetente.setGrupo(grupo);
+        }else {
+            //conversa normal
+            conversaRemetente.setUsuarioExibicao(usuarioDestinatario);
+
+        }
         conversaRemetente.salvar();
     }
 
